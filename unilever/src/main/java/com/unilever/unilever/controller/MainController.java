@@ -79,7 +79,7 @@ public class MainController {
 		try {
 
 			int count = 0;
-			DataCalculate dataCalculate=new DataCalculate();
+			DataCalculate dataCalculate = new DataCalculate();
 			InputStream inputStream = uploadfile.getInputStream();
 
 			ArrayList data = new ArrayList();
@@ -159,36 +159,6 @@ public class MainController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	// getDBConnection Method
-
-	/*public static Connection createDbConn() {
-		System.out.println("-------- PostgreSQL " + "JDBC Connection Testing ------------");
-
-		try {
-
-			Class.forName("org.postgresql.Driver");
-
-		} catch (ClassNotFoundException e) {
-
-			System.out.println("Where is your PostgreSQL JDBC Driver? " + "Include in your library path!");
-		}
-
-		System.out.println("PostgreSQL JDBC Driver Registered!");
-
-		Connection conn = null;
-
-		try {
-
-			conn = DriverManager.getConnection("jdbc:postgresql://hanno.db.elephantsql.com:5432/vnepifvr", "vnepifvr",
-					"n5CEh6y0w-zoORD2Hw1X_WpCT2yvy4wR");
-
-		} catch (SQLException e) {
-			System.out.println("Connection Failed! Check output console");
-			e.printStackTrace();
-		}
-		return conn;
-	}
-*/
 	// Insert Data Method
 
 	public static void insertData(int count, ArrayList data) {
@@ -197,13 +167,13 @@ public class MainController {
 			Connection conn = null;
 			PreparedStatement pstmt, pstmt1 = null;
 			ArrayList dataHolder = data;
-			
+
 			conn = DBconnection.createDbConn();
 			try {
 				String sql = "insert into input_parameter(Source_Type, Source, SKU, Location, Location_Type, Location_Layer, Category, Service_Level, SKU_Classification, Production_Time, QA_Time, Transit_Time, Planning_Period, Frozen_Period, OR_Value, Other_Lead_Time, Lead_Time_Variability) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 				pstmt = conn.prepareStatement(sql);
 				System.out.println("ArrayList:" + dataHolder);
-				
+
 				pstmt.setString(1, data.get(0).toString());
 				pstmt.setString(2, data.get(1).toString());
 				pstmt.setString(3, data.get(2).toString());
@@ -401,63 +371,63 @@ public class MainController {
 				}
 			}
 		}
-		
-		
-		if(count==3)
-		 {
- 		Connection conn=null;
-     	PreparedStatement pstmt=null,pstmt1=null;
-     	ArrayList dataHolder=data; 
- 		conn= DBconnection.createDbConn(); 
- 		try {
- 			String sql= "insert into Future_Forecast(Basepack, Basepack_Desc, Material, Material_Desc, Depot, Depot_Desc, Week_201727, Week_201728, Week_201729, Week_201730, Week_201731, Week_201732, Week_201733, Week_201734, Week_201735)values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			pstmt=conn.prepareStatement(sql);
-			
-			pstmt.setString(1, data.get(0).toString());
-			pstmt.setString(2, data.get(1).toString());
-			pstmt.setString(3, data.get(2).toString());
-			pstmt.setString(4, data.get(3).toString());
-			pstmt.setString(5, data.get(4).toString());
-			pstmt.setString(6, data.get(5).toString());
-			pstmt.setFloat(7, Float.parseFloat(data.get(6).toString()));
-			pstmt.setFloat(8, Float.parseFloat(data.get(7).toString()));
-			pstmt.setFloat(9, Float.parseFloat(data.get(8).toString()));
-			pstmt.setFloat(10, Float.parseFloat(data.get(9).toString()));
-			pstmt.setFloat(11, Float.parseFloat(data.get(10).toString()));
-			pstmt.setFloat(12, Float.parseFloat(data.get(11).toString()));
-			pstmt.setFloat(13, Float.parseFloat(data.get(12).toString()));
-			pstmt.setFloat(14, Float.parseFloat(data.get(13).toString()));
-			pstmt.setFloat(15, Float.parseFloat(data.get(14).toString()));
-			
-			pstmt.executeUpdate();
-			
-			String skuCode=data.get(0).toString()+"-"+data.get(4).toString();
-			float avgForecast= (Float.parseFloat(data.get(6).toString())+Float.parseFloat(data.get(7).toString())+Float.parseFloat(data.get(8).toString())+Float.parseFloat(data.get(9).toString())+Float.parseFloat(data.get(10).toString())+Float.parseFloat(data.get(11).toString())+Float.parseFloat(data.get(12).toString())+Float.parseFloat(data.get(13).toString())+Float.parseFloat(data.get(14).toString()))/2;
-			 
-			 System.out.println("SKU:"+ skuCode + "avgForecast:" +avgForecast);
-			 String sql1="update Future_Forecast SET SKU_CODE=?, Avg_Future_Forecast=? where Basepack='"+data.get(0).toString()+"' and Depot='"+data.get(4).toString()+"'";
-			 pstmt1 = conn.prepareStatement(sql1);
-			 
-			 pstmt1.setString(1, skuCode);
-			 pstmt1.setFloat(2, avgForecast);
-			 
-			 pstmt1.executeUpdate();
-			
- 		}
-  		catch (SQLException e) {
-			e.printStackTrace();
-	 }
- 		finally {
- 			try {
- 			conn.close();
- 			pstmt.close();
- 			pstmt1.close();
- 			}
- 			catch (SQLException e) {
- 				e.printStackTrace();
- 		 }
- 		}
-		 }
+
+		if (count == 3) {
+			Connection conn = null;
+			PreparedStatement pstmt = null, pstmt1 = null;
+			ArrayList dataHolder = data;
+			conn = DBconnection.createDbConn();
+			try {
+				String sql = "insert into Future_Forecast(Basepack, Basepack_Desc, Material, Material_Desc, Depot, Depot_Desc, Week_201727, Week_201728, Week_201729, Week_201730, Week_201731, Week_201732, Week_201733, Week_201734, Week_201735)values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				pstmt = conn.prepareStatement(sql);
+
+				pstmt.setString(1, data.get(0).toString());
+				pstmt.setString(2, data.get(1).toString());
+				pstmt.setString(3, data.get(2).toString());
+				pstmt.setString(4, data.get(3).toString());
+				pstmt.setString(5, data.get(4).toString());
+				pstmt.setString(6, data.get(5).toString());
+				pstmt.setFloat(7, Float.parseFloat(data.get(6).toString()));
+				pstmt.setFloat(8, Float.parseFloat(data.get(7).toString()));
+				pstmt.setFloat(9, Float.parseFloat(data.get(8).toString()));
+				pstmt.setFloat(10, Float.parseFloat(data.get(9).toString()));
+				pstmt.setFloat(11, Float.parseFloat(data.get(10).toString()));
+				pstmt.setFloat(12, Float.parseFloat(data.get(11).toString()));
+				pstmt.setFloat(13, Float.parseFloat(data.get(12).toString()));
+				pstmt.setFloat(14, Float.parseFloat(data.get(13).toString()));
+				pstmt.setFloat(15, Float.parseFloat(data.get(14).toString()));
+
+				pstmt.executeUpdate();
+
+				String skuCode = data.get(0).toString() + "-" + data.get(4).toString();
+				float avgForecast = (Float.parseFloat(data.get(6).toString()) + Float.parseFloat(data.get(7).toString())
+						+ Float.parseFloat(data.get(8).toString()) + Float.parseFloat(data.get(9).toString())
+						+ Float.parseFloat(data.get(10).toString()) + Float.parseFloat(data.get(11).toString())
+						+ Float.parseFloat(data.get(12).toString()) + Float.parseFloat(data.get(13).toString())
+						+ Float.parseFloat(data.get(14).toString())) / 2;
+
+				System.out.println("SKU:" + skuCode + "avgForecast:" + avgForecast);
+				String sql1 = "update Future_Forecast SET SKU_CODE=?, Avg_Future_Forecast=? where Basepack='"
+						+ data.get(0).toString() + "' and Depot='" + data.get(4).toString() + "'";
+				pstmt1 = conn.prepareStatement(sql1);
+
+				pstmt1.setString(1, skuCode);
+				pstmt1.setFloat(2, avgForecast);
+
+				pstmt1.executeUpdate();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					conn.close();
+					pstmt.close();
+					pstmt1.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 	}
 
