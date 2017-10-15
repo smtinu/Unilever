@@ -9,15 +9,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import com.unilever.unilever.controller.DBconnection;
 
+//import org.apache.commons.math.MathException;
+//import org.apache.commons.math.distribution.NormalDistribution;
+//import org.apache.commons.math.distribution.NormalDistributionImpl;
+
 public class DataCalculate {
 	
 	 public static void calculateData() {
 		    DBconnection dbConnect = new DBconnection();
 	   		Connection conn=null;
-	       	PreparedStatement pstmt=null, pstmt1=null;
-	       	Statement st = null;
-	        ResultSet rs = null;
+	   		PreparedStatement pstmt=null, pstmt1=null, pstmt2=null;
+	       	Statement st = null, st1 = null, st2 = null, st3 = null;
+	        ResultSet rs = null, rs1 = null, rs2 = null, rs3 = null;
 	        ArrayList arrayList = new ArrayList<String>();
+	     //   NormalDistribution d = null;
 	   		conn= DBconnection.createDbConn(); 
 	   		try {
 	   			String sql= "insert into BIAS_CALCULATION(SKU,LOCATION,SKU_NO,Forecast_WEEK_352016,Sales_WEEK_352016,Forecast_WEEK_362016,Sales_WEEK_362016,Forecast_WEEK_372016,Sales_WEEK_372016,Forecast_WEEK_382016,Sales_WEEK_382016,Forecast_WEEK_392016,Sales_WEEK_392016,Forecast_WEEK_402016,Sales_WEEK_402016,Forecast_WEEK_412016,Sales_WEEK_412016,Forecast_WEEK_422016,Sales_WEEK_422016,Forecast_WEEK_432016,Sales_WEEK_432016,Forecast_WEEK_442016,Sales_WEEK_442016,Forecast_WEEK_452016,Sales_WEEK_452016,Forecast_WEEK_462016,Sales_WEEK_462016,Forecast_WEEK_472016,Sales_WEEK_472016,Forecast_WEEK_482016,Sales_WEEK_482016,Forecast_WEEK_492016,Sales_WEEK_492016,Forecast_WEEK_502016,Sales_WEEK_502016,Forecast_WEEK_512016,Sales_WEEK_512016,Forecast_WEEK_522016,Sales_WEEK_522016,Forecast_WEEK_012017,Sales_WEEK_012017,Forecast_WEEK_022017,Sales_WEEK_022017,Forecast_WEEK_032017,Sales_WEEK_032017,Forecast_WEEK_042017,Sales_WEEK_042017,Forecast_WEEK_052017,Sales_WEEK_052017,Forecast_WEEK_062017,Sales_WEEK_062017,Forecast_WEEK_072017,Sales_WEEK_072017,Forecast_WEEK_082017,Sales_WEEK_082017,Forecast_WEEK_092017,Sales_WEEK_092017,Forecast_WEEK_102017,Sales_WEEK_102017,Forecast_WEEK_112017,Sales_WEEK_112017,Forecast_WEEK_122017,Sales_WEEK_122017,Forecast_WEEK_132017,Sales_WEEK_132017,Forecast_WEEK_142017,Sales_WEEK_142017,Forecast_WEEK_152017,Sales_WEEK_152017,Forecast_WEEK_162017,Sales_WEEK_162017,Forecast_WEEK_172017,Sales_WEEK_172017,Forecast_WEEK_182017,Sales_WEEK_182017) (select a.SKU, a.LOCATION, a.SKU_CODE, a.Week35_2016, b.Week35_2016 Sales_Week35_2016, a.Week36_2016, b.Week36_2016 Sales_Week36_2016, a.Week37_2016, b.Week37_2016 Sales_Week37_2016, a.Week38_2016, b.Week38_2016 Sales_Week38_2016, a.Week39_2016, b.Week39_2016 Sales_Week39_2016, a.Week40_2016, b.Week40_2016 Sales_Week40_2016, a.Week41_2016, b.Week41_2016 Sales_Week41_2016, a.Week42_2016, b.Week42_2016 Sales_Week42_2016, a.Week43_2016, b.Week43_2016 Sales_Week43_2016, a.Week44_2016, b.Week44_2016 Sales_Week44_2016, a.Week45_2016, b.Week45_2016 Sales_Week45_2016, a.Week46_2016, b.Week46_2016 Sales_Week46_2016, a.Week47_2016, b.Week47_2016 Sales_Week47_2016, a.Week48_2016, b.Week48_2016 Sales_Week48_2016, a.Week49_2016, b.Week49_2016 Sales_Week49_2016, a.Week50_2016, b.Week50_2016 Sales_Week50_2016, a.Week51_2016, b.Week51_2016 Sales_Week51_2016, a.Week52_2016, b.Week52_2016 Sales_Week52_2016, a.Week01_2017, b.Week01_2017 Sales_Week01_2017, a.Week02_2017, b.Week02_2017 Sales_Week02_2017, a.Week03_2017, b.Week03_2017 Sales_Week03_2017, a.Week04_2017, b.Week04_2017 Sales_Week04_2017, a.Week05_2017, b.Week05_2017 Sales_Week05_2017, a.Week06_2017, b.Week06_2017 Sales_Week06_2017, a.Week07_2017, b.Week07_2017 Sales_Week07_2017, a.Week08_2017, b.Week08_2017 Sales_Week08_2017, a.Week09_2017, b.Week09_2017 Sales_Week09_2017, a.Week10_2017, b.Week10_2017 Sales_Week10_2017, a.Week11_2017, b.Week11_2017 Sales_Week11_2017, a.Week12_2017, b.Week12_2017 Sales_Week12_2017, a.Week13_2017, b.Week13_2017 Sales_Week13_2017, a.Week14_2017, b.Week14_2017 Sales_Week14_2017, a.Week15_2017, b.Week15_2017 Sales_Week15_2017, a.Week16_2017, b.Week16_2017 Sales_Week16_2017, a.Week17_2017, b.Week17_2017 Sales_Week17_2017, a.Week18_2017, b.Week18_2017 Sales_Week18_2017 from Past_Forecast a, Past_Sales b where a.SKU_CODE=b.SKU_CODE)";
@@ -367,6 +372,153 @@ public class DataCalculate {
 		             pstmt1.setFloat(117, weeklyAvgForecast);
 					 
 					 pstmt1.executeUpdate();
+					 
+					 
+					 /* IPM MODEL CALCULATIONS */
+					 
+					 System.out.println("IPM Calculations Started");
+					 
+					 String sql3="SELECT * FROM SELECTION";
+					 st1 = conn.createStatement();
+			         rs1 = st1.executeQuery(sql3);
+			         int serviceLevel;
+			         String targetServiceLevel="";
+			         float minCapping = 0;
+					 
+			         if (rs1.next()) {
+			        	 targetServiceLevel = rs1.getString("Target_ServiceLevel");
+			        	 minCapping = rs1.getFloat("Min_Capping");		                       
+			         }
+			         String sql4="SELECT a.SKU,a.Location,a.Location_Type,a.Material_Location,a.Category,a.Service_Level,b.Weekly_Avg_Forecast,b.SDFE,b.SDFE_Perc,a.Production_Time,a.OR_Value,a.Source,a.SKU_Classification,a.Avg_Lead_Time,a.Lead_Time_Variability,a.Current_SSWeeks,a.Price,a.SKU_Name FROM Input_Parameter a, BIAS_CALCULATION b where a.Material_Location= b.SKU_NO and a.Material_Location='"+skuNo+"'";
+					 st2 = conn.createStatement();
+			         rs2 = st2.executeQuery(sql4);
+			         
+			         while(rs2.next())
+			         {
+			        	 System.out.println("Inside select block");
+			        	 String SKU = rs2.getString(1);
+			        	 String location1 = rs2.getString(2);
+			        	 String locationType =rs2.getString(3);
+			        	 String materialLocation = rs2.getString(4);
+			        	 String category = rs2.getString(5);
+			        	 if(targetServiceLevel.equals("Category service level"))
+				         {
+				        	 serviceLevel =rs1.getInt("Category_ServiceLevel"); 
+				         }	
+			        	 else
+			        	 {
+			        		 serviceLevel = rs2.getInt(6);
+			        	 }		        	 
+			        	 float avgWeeklyDemand = rs2.getFloat(7);
+			        	 float sdfe1 = rs2.getFloat(8);
+			        	 int sdfePerc1 = rs2.getInt(9);
+			        	 float cycleTime = rs2.getFloat(10);
+			        	 int orValue = rs2.getInt(11);
+			        	 String source = rs2.getString(12);
+			        	 String skuClassiication = rs2.getString(13);
+			        	 float avgLeadTime = rs2.getFloat(14);
+			        	 float leadTimeVariability = rs2.getFloat(15);
+			        	 float currentSSWeeks = rs2.getFloat(16);
+			        	 float price = rs2.getFloat(17);
+			        	 String skuName = rs2.getString(18);
+			       
+				         float lotSize = cycleTime * avgWeeklyDemand;
+				         double SdVariability = Math.sqrt(((Math.pow(sdfe, 2)) * (avgLeadTime)) + Math.pow(((avgWeeklyDemand) * (leadTimeVariability)),2) + Math.pow(avgWeeklyDemand,2) * Math.pow(1.25, 2) * Math.pow((cycleTime * (1-orValue)),2));
+				         double cFactorSales = 0.92 + Math.log(avgWeeklyDemand * cycleTime * ((1-serviceLevel)/SdVariability));
+				         double kFactorSales = -1.19 + Math.sqrt(((Math.pow(1.19, 2)) - 4*0.37*cFactorSales)/(2*0.37));
+				         //double cycleServiceLevel = d.cumulativeProbability(kFactorSales);
+				         double cycleServiceLevel =0;
+				         double modelSafetyStock=0;
+				         if(avgWeeklyDemand==0)
+				         {
+				        	 modelSafetyStock=0;
+				         }
+				         else if((kFactorSales * SdVariability)>0)
+				         {
+				        	 modelSafetyStock = kFactorSales * SdVariability;
+				         }
+				         double safetyStockWeeks;
+				         if(modelSafetyStock==0)
+				         {
+				        	 safetyStockWeeks=0;
+				         }
+				         else if ((modelSafetyStock/avgWeeklyDemand)>13)
+				         {
+				        	 safetyStockWeeks =13;
+				         }
+				         else
+				         {
+				        	 safetyStockWeeks = (modelSafetyStock/avgWeeklyDemand);
+				         }
+				         long safetyStockDays = Math.round(safetyStockWeeks*7);
+				         double minStockAfterCapping;
+				         if(safetyStockWeeks < minCapping || safetyStockWeeks == 0)
+				         {
+				        	 minStockAfterCapping = minCapping;
+				         }
+				         else {
+				        	 minStockAfterCapping = safetyStockWeeks;
+				         }
+				         double maxStockWeeks = minStockAfterCapping + cycleTime;
+				         double minStockAfterCappingCs = avgWeeklyDemand * minStockAfterCapping;
+				         double maxStockCs = avgWeeklyDemand * maxStockWeeks;
+				         double currentSsValue = currentSSWeeks * avgWeeklyDemand * price;
+				         double proposedIpmSsValue = price * minStockAfterCapping;
+				         double minNormWeeks = minStockAfterCapping;
+				         double maxNormWeeks = maxStockWeeks;
+				         double minStock = minNormWeeks * price * avgWeeklyDemand;
+				         double maxStock = maxNormWeeks * price * avgWeeklyDemand;
+				         double avgCycleStock = (cycleTime/2) * price * avgWeeklyDemand;
+				         
+				         String sql5 = "insert into IPM_MODEL values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				         pstmt2=conn.prepareStatement(sql5);
+				         pstmt2.setString(1,SKU);
+				         pstmt2.setString(2,skuName);
+				         pstmt2.setString(3,location1);
+				         pstmt2.setString(4,locationType);
+				         pstmt2.setString(5,materialLocation);
+				         pstmt2.setString(6,skuClassiication);
+				         pstmt2.setString(7,source);
+				         pstmt2.setString(8,category);
+				         pstmt2.setInt(9,serviceLevel);
+				         pstmt2.setFloat(10,avgWeeklyDemand);
+				         pstmt2.setInt(11,sdfePerc1);
+				         pstmt2.setDouble(12,sdfe);
+				         pstmt2.setDouble(13,lotSize);
+				         pstmt2.setInt(14, orValue);
+				         pstmt2.setFloat(15, cycleTime);
+				         pstmt2.setFloat(16, avgLeadTime);
+				         pstmt2.setFloat(17, leadTimeVariability);
+				         pstmt2.setDouble(18, SdVariability);
+				         pstmt2.setDouble(19, cFactorSales);
+				         pstmt2.setDouble(20, kFactorSales);
+				         pstmt2.setDouble(21, cycleServiceLevel);
+				         pstmt2.setDouble(22, 0);
+				         pstmt2.setInt(23, 0);
+				         pstmt2.setInt(24, 0);
+				         pstmt2.setInt(25, 0);
+				         pstmt2.setDouble(26, modelSafetyStock);
+				         pstmt2.setDouble(27, safetyStockWeeks);
+				         pstmt2.setLong(28,safetyStockDays);
+				         pstmt2.setDouble(29, minStockAfterCapping);
+				         pstmt2.setDouble(30, maxStockWeeks);
+				         pstmt2.setDouble(31, minStockAfterCappingCs);
+				         pstmt2.setDouble(32, maxStockCs);
+				         pstmt2.setFloat(33, currentSSWeeks);
+				         pstmt2.setFloat(34, price);
+				         pstmt2.setDouble(35, currentSsValue);
+				         pstmt2.setDouble(36, proposedIpmSsValue);
+				         pstmt2.setDouble(37, minNormWeeks);
+				         pstmt2.setDouble(38, maxNormWeeks);
+				         pstmt2.setDouble(39, minStock);
+				         pstmt2.setDouble(40, maxStock);
+				         pstmt2.setDouble(41, avgCycleStock);
+				         
+						 pstmt2.executeUpdate();
+						 
+						 System.out.println("Insertion Completed");
+			         }
+					 
 		         }
 	   		}
 	   		catch (SQLException e) {
