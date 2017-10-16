@@ -36,9 +36,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.unilever.unileverdownload.controller.DBconnection;
 
-
-
-
 @Controller
 public class MainController {
 
@@ -47,7 +44,6 @@ public class MainController {
 	private static final String DOMAIN_ID = "3a512cebf44640acaefed32112e9ce8c";
 	private static final String PROJECT_ID = "0ab4d206302d4cb38b0e3d1f9c8681bd";
 
-	
 	@Autowired
 	private Environment env;
 
@@ -73,61 +69,46 @@ public class MainController {
 	@RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> uploadFile() {
-		
-	
-		System.out.println("111111111111111111");
-		
+
 		XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("IPM Model");
-        DBconnection dbConnect = new DBconnection();
-        Connection conn=null;
-        Statement st = null;
-        ResultSet rs = null;
-    	PreparedStatement pstmt=null;
-    	conn = DBconnection.createDbConn();
+		XSSFSheet sheet = workbook.createSheet("IPM Model");
+		DBconnection dbConnect = new DBconnection();
+		Connection conn = null;
+		Statement st = null;
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		conn = DBconnection.createDbConn();
 		try {
-			String sql="select * from IPM_MODEL";
-			 st = conn.createStatement();
-	         rs = st.executeQuery(sql);
-	         ResultSetMetaData metadata = rs.getMetaData();
-	         int numberOfColumns = metadata.getColumnCount();
-	         
-	         Row header = sheet.createRow(0);
-	         
-	         for(int i=1,j=0; i<= numberOfColumns; i++,j++)
-	         {
-	        	 header.createCell(j).setCellValue(metadata.getColumnName(i));
-	         }
-	         
-	         int l=1;
- 	         while(rs.next())
- 	         {
- 	        	XSSFRow row=   sheet.createRow((short)l);
- 	        	for(int m=0,n=1; n<=numberOfColumns;m++)
- 	        	{
- 	        		row.createCell((short) m).setCellValue(rs.getString(n++));
- 	        	}
- 	        	//row.createCell((short) 0).setCellValue(rs.getString("SKU_NO"));
- 	        	//row.createCell((short) 1).setCellValue(rs.getString("name"));
- 	        	//row.createCell((short) 2).setCellValue(rs.getString("address"));
- 	        	l++;
- 	        
- 	         }
-	       
-	         FileOutputStream outputStream = new FileOutputStream(new File("HUL.xlsx"));
-	             workbook.write(outputStream);
-		}
-		catch(Exception e)
-		{
+			String sql = "select * from IPM_MODEL";
+			st = conn.createStatement();
+			rs = st.executeQuery(sql);
+			ResultSetMetaData metadata = rs.getMetaData();
+			int numberOfColumns = metadata.getColumnCount();
+
+			Row header = sheet.createRow(0);
+
+			for (int i = 1, j = 0; i <= numberOfColumns; i++, j++) {
+				header.createCell(j).setCellValue(metadata.getColumnName(i));
+			}
+
+			int l = 1;
+			while (rs.next()) {
+				XSSFRow row = sheet.createRow((short) l);
+				for (int m = 0, n = 1; n <= numberOfColumns; m++) {
+					row.createCell((short) m).setCellValue(rs.getString(n++));
+				}
+
+				l++;
+
+			}
+
+			FileOutputStream outputStream = new FileOutputStream(new File("HUL.xlsx"));
+			workbook.write(outputStream);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
 
-	
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
-	
-	 
+
 }
