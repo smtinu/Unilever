@@ -163,149 +163,149 @@ public class MainController {
 
 	public static void insertData(int count, ArrayList data) {
 		DBconnection dbConnect = new DBconnection();
-		if (count == 0) {
-			Connection conn = null;
-			PreparedStatement pstmt, pstmt1 = null;
-			ArrayList dataHolder = data;
+		if(count==0)
+       	{
+    		Connection conn=null;
+        	PreparedStatement pstmt=null,pstmt1=null;
+        	ArrayList dataHolder=data; 
+        	conn = DBconnection.createDbConn();
+    		try {
+    			String sql= "insert into input_parameter(Source_Type, Source, SKU, SKU_Name, Location, Location_Type, Location_Layer, Category, Service_Level, SKU_Classification, Production_Time, QA_Time, Transit_Time, Planning_Period, Frozen_Period, OR_Value, Other_Lead_Time, Lead_Time_Variability, Current_SSWeeks, Price) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				pstmt=conn.prepareStatement(sql);
+					System.out.println("ArrayList:" +dataHolder);
+					pstmt.setString(1, data.get(0).toString());
+					pstmt.setString(2, data.get(1).toString());
+					pstmt.setString(3, data.get(2).toString());
+					pstmt.setString(4, data.get(3).toString());
+					pstmt.setString(5, data.get(4).toString());
+					pstmt.setString(6, data.get(5).toString());
+					pstmt.setInt(7, Integer.parseInt(data.get(6).toString()));
+					pstmt.setString(8, data.get(7).toString());
 
-			conn = DBconnection.createDbConn();
-			try {
-				String sql = "insert into input_parameter(Source_Type, Source, SKU, Location, Location_Type, Location_Layer, Category, Service_Level, SKU_Classification, Production_Time, QA_Time, Transit_Time, Planning_Period, Frozen_Period, OR_Value, Other_Lead_Time, Lead_Time_Variability) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-				pstmt = conn.prepareStatement(sql);
-				System.out.println("ArrayList:" + dataHolder);
+					String value= data.get(8).toString();
+					String value2=value.replaceAll("%", "");
+					pstmt.setFloat(9, Integer.parseInt(value2));
+					pstmt.setString(10, data.get(9).toString());
+					pstmt.setDouble(11, Double.parseDouble(data.get(10).toString()));
+					System.out.println("Float Value:"+ Float.parseFloat(data.get(10).toString()));
+					pstmt.setFloat(12, Float.parseFloat(data.get(11).toString()));
+					pstmt.setFloat(13,Float.parseFloat(data.get(12).toString()));
+					pstmt.setFloat(14, Float.parseFloat(data.get(13).toString()));
+					pstmt.setFloat(15, Float.parseFloat(data.get(14).toString()));
+
+					String value3=dataHolder.get(15).toString();
+					String value4= value3.replaceAll("%", "");
+					pstmt.setInt(16, Integer.parseInt(value4));
+
+					pstmt.setFloat(17, Float.parseFloat(data.get(16).toString()));
+					pstmt.setFloat(18, Float.parseFloat(data.get(17).toString()));
+					pstmt.setFloat(19, Float.parseFloat(data.get(18).toString()));
+					pstmt.setFloat(20, Float.parseFloat(data.get(19).toString()));
+
+				 pstmt.executeUpdate();
+
+				 String skuCode=data.get(2).toString()+"-"+data.get(4).toString();
+				 float avgTime =(Float.parseFloat(dataHolder.get(10).toString())/2)+(Float.parseFloat(dataHolder.get(11).toString()))+(Float.parseFloat(dataHolder.get(12).toString()))+(Float.parseFloat(dataHolder.get(13).toString()))+(Float.parseFloat(dataHolder.get(16).toString()));
+
+				 System.out.println("SKU"+ skuCode + "AvgTime" + avgTime);
+				 String sql1="update input_parameter SET Material_Location=?, Avg_Lead_Time=? where SKU='"+data.get(2).toString()+"' and Location='"+data.get(4).toString()+"'";
+				 pstmt1 = conn.prepareStatement(sql1);
+
+				 pstmt1.setString(1, skuCode);
+				 pstmt1.setFloat(2, avgTime);		 
+
+
+				 pstmt1.executeUpdate();
+    		} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+    		finally {
+      			try {
+	      			conn.close();
+	      			pstmt.close();
+	      			pstmt1.close();
+      			}
+      			catch (SQLException e) {
+      				e.printStackTrace();
+      		 }
+      		}
+
+    	} 
+		if(count==1)
+		 {
+   		Connection conn=null;
+       	PreparedStatement pstmt=null,pstmt1=null;
+       	ArrayList dataHolder=data; 
+       	conn = DBconnection.createDbConn();
+   		try {
+
+   			String sql= "insert into Past_Forecast(SKU, LOCATION, Week35_2016, Week36_2016, Week37_2016, Week38_2016, Week39_2016, Week40_2016, Week41_2016, Week42_2016, Week43_2016, Week44_2016, Week45_2016, Week46_2016, Week47_2016, Week48_2016, Week49_2016, Week50_2016, Week51_2016, Week52_2016, Week01_2017, Week02_2017, Week03_2017, Week04_2017, Week05_2017, Week06_2017, Week07_2017, Week08_2017, Week09_2017, Week10_2017, Week11_2017, Week12_2017, Week13_2017, Week14_2017, Week15_2017, Week16_2017, Week17_2017, Week18_2017)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				pstmt=conn.prepareStatement(sql);
 
 				pstmt.setString(1, data.get(0).toString());
 				pstmt.setString(2, data.get(1).toString());
-				pstmt.setString(3, data.get(2).toString());
-				pstmt.setString(4, data.get(3).toString());
-				pstmt.setString(5, data.get(4).toString());
-				pstmt.setInt(6, Integer.parseInt(data.get(5).toString()));
-				pstmt.setString(7, data.get(6).toString());
-
-				String value = data.get(7).toString();
-				String value2 = value.replaceAll("%", "");
-				pstmt.setFloat(8, Integer.parseInt(value2));
-				pstmt.setString(9, data.get(8).toString());
-
+				pstmt.setFloat(3, Float.parseFloat(data.get(2).toString()));
+				pstmt.setFloat(4, Float.parseFloat(data.get(3).toString()));
+				pstmt.setFloat(5, Float.parseFloat(data.get(4).toString()));
+				pstmt.setFloat(6, Float.parseFloat(data.get(5).toString()));
+				pstmt.setFloat(7, Float.parseFloat(data.get(6).toString()));
+				pstmt.setFloat(8, Float.parseFloat(data.get(7).toString()));
+				pstmt.setFloat(9, Float.parseFloat(data.get(8).toString()));
 				pstmt.setFloat(10, Float.parseFloat(data.get(9).toString()));
-
-				System.out.println("Float Value:" + Float.parseFloat(data.get(10).toString()));
 				pstmt.setFloat(11, Float.parseFloat(data.get(10).toString()));
 				pstmt.setFloat(12, Float.parseFloat(data.get(11).toString()));
 				pstmt.setFloat(13, Float.parseFloat(data.get(12).toString()));
 				pstmt.setFloat(14, Float.parseFloat(data.get(13).toString()));
-
-				String value3 = dataHolder.get(14).toString();
-				String value4 = value3.replaceAll("%", "");
-				pstmt.setInt(15, Integer.parseInt(value4));
-
+				pstmt.setFloat(15, Float.parseFloat(data.get(14).toString()));
 				pstmt.setFloat(16, Float.parseFloat(data.get(15).toString()));
 				pstmt.setFloat(17, Float.parseFloat(data.get(16).toString()));
-
-				pstmt.executeUpdate();
-
-				String skuCode = data.get(2).toString() + "-" + data.get(3).toString();
-				float avgTime = (Float.parseFloat(dataHolder.get(9).toString()) / 2)
-						+ (Float.parseFloat(dataHolder.get(10).toString()))
-						+ (Float.parseFloat(dataHolder.get(11).toString()))
-						+ (Float.parseFloat(dataHolder.get(12).toString()))
-						+ (Float.parseFloat(dataHolder.get(15).toString()));
-
-				System.out.println("SKU" + skuCode + "AvgTime" + avgTime);
-				String sql1 = "update input_parameter SET Material_Location=?, Avg_Lead_Time=? where SKU='"
-						+ data.get(2).toString() + "' and Location='" + data.get(3).toString() + "'";
-				pstmt1 = conn.prepareStatement(sql1);
-
-				pstmt1.setString(1, skuCode);
-				pstmt1.setFloat(2, avgTime);
-
-				pstmt1.executeUpdate();
-
-				conn.close();
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
-			finally {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-		}
-		if (count == 0) {
-			Connection conn = null;
-			PreparedStatement pstmt = null, pstmt1 = null;
-			ArrayList dataHolder = data;
-			conn = DBconnection.createDbConn();
-			try {
-				String sql = "insert into input_parameter(Source_Type, Source, SKU, SKU_Name, Location, Location_Type, Location_Layer, Category, Service_Level, SKU_Classification, Production_Time, QA_Time, Transit_Time, Planning_Period, Frozen_Period, OR_Value, Other_Lead_Time, Lead_Time_Variability, Current_SSWeeks, Price) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-				pstmt = conn.prepareStatement(sql);
-				System.out.println("ArrayList:" + dataHolder);
-				pstmt.setString(1, data.get(0).toString());
-				pstmt.setString(2, data.get(1).toString());
-				pstmt.setString(3, data.get(2).toString());
-				pstmt.setString(4, data.get(3).toString());
-				pstmt.setString(5, data.get(4).toString());
-				pstmt.setString(6, data.get(5).toString());
-				pstmt.setInt(7, Integer.parseInt(data.get(6).toString()));
-				pstmt.setString(8, data.get(7).toString());
-
-				String value = data.get(8).toString();
-				String value2 = value.replaceAll("%", "");
-				pstmt.setFloat(9, Integer.parseInt(value2));
-				pstmt.setString(10, data.get(9).toString());
-				pstmt.setDouble(11, Double.parseDouble(data.get(10).toString()));
-				System.out.println("Float Value:" + Float.parseFloat(data.get(10).toString()));
-				pstmt.setFloat(12, Float.parseFloat(data.get(11).toString()));
-				pstmt.setFloat(13, Float.parseFloat(data.get(12).toString()));
-				pstmt.setFloat(14, Float.parseFloat(data.get(13).toString()));
-				pstmt.setFloat(15, Float.parseFloat(data.get(14).toString()));
-
-				String value3 = dataHolder.get(15).toString();
-				String value4 = value3.replaceAll("%", "");
-				pstmt.setInt(16, Integer.parseInt(value4));
-
-				pstmt.setFloat(17, Float.parseFloat(data.get(16).toString()));
 				pstmt.setFloat(18, Float.parseFloat(data.get(17).toString()));
-				pstmt.setFloat(19, Float.parseFloat(data.get(18).toString()));
+				pstmt.setFloat(19, Float.parseFloat(data.get(19).toString()));
 				pstmt.setFloat(20, Float.parseFloat(data.get(19).toString()));
+				pstmt.setFloat(21, Float.parseFloat(data.get(20).toString()));
+				pstmt.setFloat(22, Float.parseFloat(data.get(21).toString()));
+				pstmt.setFloat(23, Float.parseFloat(data.get(22).toString()));
+				pstmt.setFloat(24, Float.parseFloat(data.get(23).toString()));
+				pstmt.setFloat(25, Float.parseFloat(data.get(24).toString()));
+				pstmt.setFloat(26, Float.parseFloat(data.get(25).toString()));
+				pstmt.setFloat(27, Float.parseFloat(data.get(26).toString()));
+				pstmt.setFloat(28, Float.parseFloat(data.get(27).toString()));
+				pstmt.setFloat(29, Float.parseFloat(data.get(28).toString()));
+				pstmt.setFloat(30, Float.parseFloat(data.get(29).toString()));
+				pstmt.setFloat(31, Float.parseFloat(data.get(30).toString()));
+				pstmt.setFloat(32, Float.parseFloat(data.get(31).toString()));
+				pstmt.setFloat(33, Float.parseFloat(data.get(32).toString()));
+				pstmt.setFloat(34, Float.parseFloat(data.get(33).toString()));
+				pstmt.setFloat(35, Float.parseFloat(data.get(34).toString()));
+				pstmt.setFloat(36, Float.parseFloat(data.get(35).toString()));
+				pstmt.setFloat(37, Float.parseFloat(data.get(36).toString()));
+				pstmt.setFloat(38, Float.parseFloat(data.get(37).toString()));
 
 				pstmt.executeUpdate();
 
-				String skuCode = data.get(2).toString() + "-" + data.get(4).toString();
-				float avgTime = (Float.parseFloat(dataHolder.get(10).toString()) / 2)
-						+ (Float.parseFloat(dataHolder.get(11).toString()))
-						+ (Float.parseFloat(dataHolder.get(12).toString()))
-						+ (Float.parseFloat(dataHolder.get(13).toString()))
-						+ (Float.parseFloat(dataHolder.get(16).toString()));
+				String skuCode=data.get(0).toString()+"-"+data.get(1).toString();
 
-				System.out.println("SKU" + skuCode + "AvgTime" + avgTime);
-				String sql1 = "update input_parameter SET Material_Location=?, Avg_Lead_Time=? where SKU='"
-						+ data.get(2).toString() + "' and Location='" + data.get(4).toString() + "'";
-				pstmt1 = conn.prepareStatement(sql1);
+				 System.out.println("SKU"+ skuCode);
+				 String sql1="update Past_Forecast SET SKU_CODE=? where SKU='"+data.get(0).toString()+"' and Location='"+data.get(1).toString()+"'";
+				 pstmt1 = conn.prepareStatement(sql1);
 
-				pstmt1.setString(1, skuCode);
-				pstmt1.setFloat(2, avgTime);
-
-				pstmt1.executeUpdate();
-			} catch (SQLException e) {
+				 pstmt1.setString(1, skuCode);	
+				 pstmt1.executeUpdate();
+   		}
+   		catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				try {
-					conn.close();
-					pstmt.close();
-					pstmt1.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-
-		}
+		 }
+   		finally {
+     			try {
+	      			conn.close();
+	      			pstmt.close();
+	      			pstmt1.close();
+     			}
+     			catch (SQLException e) {
+     				e.printStackTrace();
+     		 }
+     		}
+   }
 		if (count == 2) {
 			Connection conn = null;
 			PreparedStatement pstmt, pstmt1 = null;
